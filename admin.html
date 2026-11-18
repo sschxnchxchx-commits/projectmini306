@@ -1,0 +1,291 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - ระบบจองโต๊ะห้องสมุด</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+<div class="admin-layout">
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <h3><i class="fa-solid fa-book-open"></i> Library Admin</h3>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li class="active">
+                <a href="admin.html">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>ภาพรวมระบบ</span>
+                </a>
+            </li>
+            <li>
+                <a href="#deskManagement">
+                    <i class="fa-solid fa-chair"></i>
+                    <span>จัดการโต๊ะ</span>
+                </a>
+            </li>
+            <li>
+                <a href="#deskManagement">
+                    <i class="fa-solid fa-users"></i>
+                    <span>รายชื่อนักศึกษา</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>ตั้งค่าระบบ</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <!-- Navbar -->
+        <header class="navbar">
+            <div class="nav-brand">
+                <div class="nav-logo">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+
+                <div class="nav-title">
+                    <h1>Library Seat Management</h1>
+                    <p>ระบบบริหารจัดการโต๊ะห้องสมุดมหาวิทยาลัย</p>
+                </div>
+            </div>
+
+            <div class="nav-actions">
+                <div class="admin-badge">
+                    <div class="admin-avatar">AD</div>
+                    <div class="admin-info">
+                        <span>ผู้ดูแลระบบ (Admin)</span>
+                        <small>ระบบออนไลน์</small>
+                    </div>
+                </div>
+
+                <button class="btn-logout" onclick="logoutAdmin()">
+                    <i class="fa-solid fa-right-from-bracket"></i> ออกจากระบบ
+                </button>
+            </div>
+        </header>
+
+        <main class="container">
+
+            <!-- Date and Time -->
+            <section class="status-banner">
+                <div class="datetime-group">
+
+                    <div class="dt-item">
+                        <div class="dt-icon">
+                            <i class="fa-regular fa-calendar-days"></i>
+                        </div>
+                        <div>
+                            <small>วันที่ปัจจุบัน</small>
+                            <strong id="currentDateDisplay">----</strong>
+                        </div>
+                    </div>
+
+                    <div class="dt-item">
+                        <div class="dt-icon">
+                            <i class="fa-regular fa-clock"></i>
+                        </div>
+                        <div>
+                            <small>เวลาปัจจุบัน (Real-Time)</small>
+                            <strong id="realtimeClock" class="clock-highlight">--:--:-- น.</strong>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="dynamic-pill">
+                    <i class="fa-solid fa-rotate"></i>
+                    ระบบอัปเดตข้อมูลตามวันที่ปัจจุบัน
+                </div>
+            </section>
+
+            <section class="summary-grid">
+
+                <div class="stat-card total">
+                    <div class="stat-info">
+                        <p>โต๊ะทั้งหมดในระบบ</p>
+                        <h2>25 <span>ตัว</span></h2>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-chair"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card available">
+                    <div class="stat-info">
+                        <p>โต๊ะว่างพร้อมใช้งาน</p>
+                        <h2 id="countAvailable">22 <span>ตัว</span></h2>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card reserved">
+                    <div class="stat-info">
+                        <p>กำลังถูกจอง / ใช้งาน</p>
+                        <h2 id="countReserved">0 <span>ตัว</span></h2>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-user-clock"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card maintenance">
+                    <div class="stat-info">
+                        <p>ปิดปรับปรุง (ชำรุด)</p>
+                        <h2 id="countMaintenance">3 <span>ตัว</span></h2>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-screwdriver-wrench"></i>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Control Panels -->
+            <section class="control-grid">
+
+                <!-- Time Slot -->
+                <div class="panel-card slot-panel">
+                    <div class="panel-header">
+                        <i class="fa-solid fa-clock"></i>
+                        <h3>เลือกรอบเวลาที่ต้องการตรวจสอบ</h3>
+                    </div>
+
+                    <p class="panel-sub">
+                        ดูข้อมูลรายชื่อและสถานะโต๊ะแยกตามรอบเวลาของวันนี้
+                    </p>
+
+                    <select id="timeSlotSelect" class="form-select" onchange="loadDashboardData()">
+                        <option value="1">🌅 รอบเช้า (06:00 - 12:00 น.)</option>
+                        <option value="2">☀️ รอบบ่าย (12:00 - 18:00 น.)</option>
+                        <option value="3" selected>🌆 รอบเย็น-ค่ำ (18:00 - 24:00 น.)</option>
+                        <option value="4">🌙 รอบดึก (00:00 - 06:00 น.)</option>
+                    </select>
+                </div>
+
+                <!-- Walk-in Booking -->
+                <div class="panel-card walkin-panel">
+                    <div class="panel-header">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <h3>บริการจองโต๊ะแทนหน้าเคาน์เตอร์ (Walk-in)</h3>
+                    </div>
+
+                    <p class="panel-sub">
+                        เจ้าหน้าที่สามารถจองโต๊ะให้นักศึกษาได้โดยตรง
+                    </p>
+
+                    <form class="walkin-form" onsubmit="handleWalkInBooking(event)">
+                      <div class="walkin-form">
+                        <input
+                        type="text"
+                        id="walkinStudentId"
+                        class="form-input"
+                        placeholder="รหัสนักศึกษา"
+                        required
+                        oninvalid="this.setCustomValidity('กรุณากรอกรหัสนักศึกษา')"
+                        oninput="this.setCustomValidity('')"
+                        >
+                        
+                        <input
+                        type="text"
+                        id="walkinStudentName"
+                        class="form-input"
+                        placeholder="ชื่อ-นามสกุล นักศึกษา"
+                        required
+                        oninvalid="this.setCustomValidity('กรุณากรอกชื่อและนามสกุลนักศึกษา')"
+                        oninput="this.setCustomValidity('')"
+                        
+                        >
+                        <select
+                        id="walkinDeskSelect"
+                        class="form-select"
+                        required
+                        oninvalid="this.setCustomValidity('กรุณาเลือกโต๊ะว่างก่อนทำรายการ')"
+                        onchange="this.setCustomValidity('')"
+                        >
+                        
+                        <option value="">เลือกโต๊ะว่าง...</option>
+                    </select>
+                    
+                    <button type="submit" class="btn-primary">
+                        <i class="fa-solid fa-plus"></i>จองแทนทันที</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+        
+        <section class="table-card" id="deskManagement">
+            <div class="table-toolbar">
+                <div class="table-title">
+                    <i class="fa-solid fa-table-list"></i>
+                    <h3>รายการสถานะโต๊ะทั้งหมด 25 ตัว</h3>
+                </div>
+                
+                <div class="toolbar-actions">
+                     <div class="filter-group">
+                        <button class="filter-btn active" onclick="setFilter('all', this)">
+                            ทั้งหมด (25)
+                        </button>
+                         <button class="filter-btn" onclick="setFilter('available', this)">
+                            ว่าง
+                        </button>
+                    <button class="filter-btn" onclick="setFilter('reserved', this)">
+                            ถูกจอง
+                        </button>
+                        <button class="filter-btn" onclick="setFilter('maintenance', this)">
+                        ปิดปรับปรุง
+                    </button>
+                </div>
+                <button class="btn-primary" onclick="loadDashboardData(true)">
+                    <i class="fa-solid fa-rotate"></i>
+                     รีเฟรชข้อมูลล่าสุด
+                    </button>
+                </div>
+            </div>
+            
+            <div class="table-wrapper">
+                <table>
+                     <thead>
+                        <tr>
+                            <th style="width: 15%;">หมายเลขโต๊ะ</th>
+                            <th style="width: 18%;">สถานะปัจจุบัน</th>
+                            <th style="width: 28%;">ข้อมูลผู้จอง (รหัส / ชื่อ-สกุล)</th>
+                            <th style="width: 16%;">เวลาที่กดจอง</th>
+                            <th style="width: 23%;">เครื่องมือจัดการ (Admin)</th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody id="desksTableBody">
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
+        </main>
+    </div>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <div id="toastContainer" class="toast-container"></div>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script src="admin.js"></script>
+
+</body>
+</html>

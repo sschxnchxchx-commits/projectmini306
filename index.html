@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบจองโต๊ะห้องสมุด - เข้าสู่ระบบ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Kanit', sans-serif;
+        }
+        body {
+            display: flex;
+            justify-content: center; 
+            align-items: center;
+            min-height: 100vh; 
+            margin: 0;
+            padding: 20px; 
+            background-color: #0b1329;
+            color: #ffffff;
+        }
+        .login-container {
+            background-color: #283c5d;
+            padding: 40px 30px; /* แก้ระยะ Padding ขอบข้าง */
+            border-radius: 18px;
+            box-shadow: 0 0 20px rgba(71, 229, 155, 0.3);
+            width: 100%;
+            max-width: 450px;
+            border: 2px solid #73d0f7;
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        .login-header h2 {
+            font-size: 28px;
+            font-weight: 800;
+            color: #6cffa2;
+        }
+        .login-header p {
+            font-size: 15px;
+            color: #caf4a0;
+            line-height: 1.5;
+            margin-top: 6px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            color: #94ebf5;
+            margin-bottom: 8px;
+            margin-left: 2px;
+        }
+        .input-group input::placeholder {
+            color: #a2a3a5; 
+        }
+        .input-group input, 
+        .input-group select {
+            width: 100%;
+            padding: 12px 16px;
+            background-color: #0b1329;
+            border: 1.5px solid #3a506b;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 15px;
+            outline: none;
+        }
+        .input-group input:focus,
+        .input-group select:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2); 
+        }
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
+            border: none;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: opacity 0.2s;
+        }
+        .btn-primary:hover {
+           opacity: 0.9;
+        }
+        .error-alert {
+            background: rgba(255, 90, 90, 0.15);
+            border: 1px solid #e15757;
+            color: #ff9b9b;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+        .error-alert[hidden] { display: none; }
+    </style>
+</head>
+<body>
+    
+    <div class="login-container">
+        <div class="login-header">
+            <h2>LIBRARY SEAT BOOKING</h2>
+            <p>ระบบจองโต๊ะห้องสมุด - จองง่าย เลือกโต๊ะที่ใช่ในคลิกเดียว</p>
+        </div>
+
+        <form id="profileform" onsubmit="saveProfile(event)">
+            <div class="input-group">
+                <label for="studentId">รหัสนักศึกษา</label>
+                <input type="text" id="studentId" placeholder="กรอกรหัสนักศึกษา (ตัวเลขเท่านั้น)" required 
+                       oninvalid="this.setCustomValidity('กรุณากรอกรหัสนักศึกษา')"
+                       oninput="this.setCustomValidity('')">
+            </div>
+            <div class="input-group">
+                <label for="fullName">ชื่อ - นามสกุล</label>
+                <input type="text" id="fullName" placeholder="กรอกชื่อ-นามสกุล" required 
+                       oninvalid="this.setCustomValidity('กรุณากรอกชื่อ-นามสกุล')"
+                       oninput="this.setCustomValidity('')">
+            </div>
+            <div class="input-group">
+                <label for="password">รหัสผ่าน</label>
+                <input type="password" id="password" placeholder="กรอกรหัสผ่าน" required 
+                       oninvalid="this.setCustomValidity('กรุณากรอกรหัสผ่าน')"
+                       oninput="this.setCustomValidity('')">
+            </div>
+
+            <div class="input-group">
+                <label for="role">ระดับสิทธิ์ผู้ใช้งาน</label>
+                <select id="role">
+                    <option value="student">นักศึกษา (Student)</option>
+                    <option value="admin">เจ้าหน้าที่ห้องสมุด (Admin)</option>
+                </select>
+            </div>
+            
+            <div id="errorAlert" class="error-alert" hidden></div>
+            <button type="submit" class="btn-primary">เข้าสู่ระบบ</button>
+
+            <p style="text-align:center; margin-top:14px; font-size:14px; color:#9bf9bc;">
+            ลืมรหัสผ่าน? ตั้งรหัสใหม่ก่อนเข้าสู่ระบบ <a href="reset.html" style="color:#95d7f4; text-decoration:underline;">คลิกที่นี่</a>
+        </p>
+        </form>
+    </div>
+
+    <script>
+        function showError(msg) {
+            const box = document.getElementById('errorAlert');
+            box.textContent = msg;
+            box.hidden = false;
+        }
+
+        function saveProfile(event) {
+            event.preventDefault();
+            const studentId = document.getElementById('studentId').value.trim();
+            const fullName = document.getElementById('fullName').value.trim();
+            const role = document.getElementById('role').value;
+            
+            if (isNaN(studentId) || studentId === '') {
+                return showError('รหัสนักศึกษาต้องเป็นตัวเลขเท่านั้น');
+            }
+
+            localStorage.setItem('user_student_id', studentId);
+            localStorage.setItem('user_name', fullName);
+            localStorage.setItem('user_role', role);
+            
+            alert(`ยินดีต้อนรับคุณ ${fullName} เข้าสู่ระบบ!`);
+            window.location.href = role === 'admin' ? 'admin.html' : 'booking.html';
+        }
+    </script>
+</body>
+</html>
